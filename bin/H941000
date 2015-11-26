@@ -1,0 +1,110 @@
+#!/usr/bin/env node
+
+var fs = require('fs')
+var path = require('path')
+
+var YouTube = require('youtube-node')
+var youTube = new YouTube()
+youTube.setKey(process.env.YOUTUBE_KEY)
+
+var Vimeo = require('vimeo').Vimeo
+var lib   = new Vimeo(process.env.VIMEO_CLIENT_ID, process.env.VIMEO_CLIENT_SECRET, process.env.VIMEO_ACCESS_TOKEN);
+
+// copied from http://stackoverflow.com/questions/2916544/parsing-a-vimeo-id-using-javascript
+function getVimeoId(url) {
+  const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/
+  const parseUrl = regExp.exec(url)
+  if (!parseUrl)
+    return false
+  return parseUrl[5]
+}
+
+function getYoutubeId(url) {
+  var video_id            = link.split('v=')[1] || ''
+  const ampersandPosition = video_id.indexOf('&')
+  if(ampersandPosition != -1)
+    var video_id = video_id.substring(0, ampersandPosition)
+  if (!video_id)
+    return false
+  return video_id
+}
+
+function getCurrentDate(){
+  var date  = new Date();
+  var day   = date.getDate();
+  var month = date.getMonth();
+  var year  = date.getFullYear();
+  return `${day}-${month}-${year}`
+}
+
+function getCurrentDateReversed(){
+  var date  = new Date();
+  var day   = date.getDate();
+  var month = date.getMonth();
+  var year  = date.getFullYear();
+  return `${year}-${month}-${day}`
+}
+
+function genTemplate(title, video_id, link, platform) {
+  return `---
+title: ${title}
+name: ${title}
+date: ${getCurrentDate()}
+platform: ${platform}
+video_id: ${video_id}
+excerpt: ${title}
+---
+<iframe width="420" height="315" src="${link}" frameborder="0" allowfullscreen></iframe>`
+}
+
+const scriptDir    = process.argv[1].trim()
+process.chdir(path.dirname(scriptDir))
+
+const link         = process.argv[2]
+
+if(!link) {
+  console.error('Provide a link as an argument')
+  process.exit(1)
+}
+
+const youtubeId = getYoutubeId(link.trim())
+const vimeoId   = youtubeId || getVimeoId(link.trim())
+
+if (youtubeId) {
+  youTube.getById(youtubeId, function(error, result) {
+    if(error) {
+      console.log(error)
+      process.exit(1)
+    }
+
+    if(!result.items[0].status.embeddable) {
+      console.error('video not embedable')
+      process.exit(1)
+    }
+
+    const title = result.items[0].snippet.localized.title
+    const template = genTemplate(title, youtubeId, `https://www.youtube.com/embed/${youtubeId}`, 'youtube')
+    fs.writeFile(`../src/H941000/${getCurrentDateReversed()}_${title}.html`, template, function (err) {
+      if (err) throw err;
+      console.log('Check the side if everything is fine');
+    })
+  })
+} else if (vimeoId) {
+  lib.request({
+        path : '/videos/' + vimeoId
+  }, (err, data) => {
+    if(err) {
+      console.error(err)
+      process.exit(1)
+    }
+    const title    = data.name
+    const template = genTemplate(title, vimeoId, `https://player.vimeo.com/video/${vimeoId}`, 'vimeo')
+    fs.writeFile(`../src/H941000/${getCurrentDateReversed()}_${title}.html`, template, err => {
+      if (err) throw err;
+      console.log('Check the side if everything is fine');
+    })
+  })
+} else {
+  console.error('Not a valid Youtube or Vimeo Link')
+  process.exit(1)
+}
