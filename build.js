@@ -21,6 +21,7 @@ var If               = require('metalsmith-if')
 var compress         = require('metalsmith-gzip')
 var formatcheck      = require('metalsmith-formatcheck')
 var htmlMinifier     = require("metalsmith-html-minifier")
+var each             = require('metalsmith-each')
 
 // Import metadata
 var metadata         = require('./metadata')
@@ -38,28 +39,47 @@ var supported = { browsers: ['> 1%', 'last 2 versions', 'IE >= 9'] }
 
 // Build
 metalsmith(__dirname)
+  // Build to .tmp
+  .destination('.tmp')
+ 
+  // Process metadata
+  .metadata(metadata)
+  .use(pageTitles())
+
   // Process css
   .use(autoprefixer(supported))
   .use(postcss(plugins))
   .use(fingerprint({ pattern: 'index.css' }))
 
-  // Build to .tmp
-  .destination('.tmp')
+  .use(each((file, filename) => {
+    if(!!filename.match(/^H941000/g)) {
+      var player
+      if(file.platform == 'youtube')
+        player = `<iframe width="420" height="315" src="https://www.youtube.com/embed/${file.video_id}" frameborder="0" allowfullscreen></iframe>`
+      else if(file.platform == 'vimeo')
+        player = `<iframe width="420" height="315" src="https://player.vimeo.com/video/${file.video_id}" frameborder="0" allowfullscreen></iframe>`
+      else
+        throw new Error(platform + ' is unsupported')
 
-  // Process metadata
-  .metadata(metadata)
-  .use(pageTitles())
+      file.contents = new Buffer(`<h3>
+                                  <a href="/H941000/${file.channel_title}/${file.title}"
+                                     title="${file.channel} - ${file.name}">${file.date}</a>
+                                  </h3>
+                                  ${player}`)
+    }
+  }))
 
   .use(collections({
     "H941000": {
-      pattern: 'H941000/**.html',
+      pattern: 'H941000/**/**.html',
       sortBy: 'date',
       reverse: true
     }
   }))
 
   .use(permalinks({
-      pattern: ':collections/:title'
+      relative: false,
+      pattern: ':collections/:channel/:title'
   }))
 
   .use(pagination({
@@ -74,7 +94,10 @@ metalsmith(__dirname)
     }
   }))
 
-  .use(layout({ engine: 'jade' }))
+  .use(layout({
+    engine: 'jade',
+    'default': 'default.jade'
+  }))
 
   .use((files, metalsmith, done) => {
     var file, filename
@@ -100,7 +123,7 @@ metalsmith(__dirname)
     // Serve and watch for changes
     browserSync({
       server : '.tmp',
-      files : ['src/**/*', 'templates/**/*']
+      files : ['src/**/*', 'layouts/**/*']
     })
   ))
 

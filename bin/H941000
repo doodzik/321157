@@ -2,6 +2,8 @@
 
 var fs = require('fs')
 var path = require('path')
+var mkdirp = require('mkdirp')
+var shell = require('shelljs')
 
 var YouTube = require('youtube-node')
 var youTube = new YouTube()
@@ -45,16 +47,33 @@ function getCurrentDateReversed(){
   return `${year}-${month}-${day}`
 }
 
-function genTemplate(title, video_id, link, platform) {
+function genTemplate(channel, title, video_id, link, platform) {
+  name   = title
+  title  = title.replace(/\s/g, '_')
+  channelTitle  = channel.replace(/\s/g, '_')
   return `---
 title: ${title}
-name: ${title}
+name: ${name}
+channel: ${channel}
+channel_title: ${channelTitle}
 date: ${getCurrentDate()}
 platform: ${platform}
 video_id: ${video_id}
-excerpt: ${title}
----
-<iframe width="420" height="315" src="${link}" frameborder="0" allowfullscreen></iframe>`
+excerpt: ${name}
+---`
+}
+
+function write(channel, template, title){
+  channel = channel.replace(/\s/g, '_')
+  title   = title.replace(/\s/g, '_')
+  mkdirp('../src/H941000/' + channel, err => {
+    if (err) throw err;
+    fs.writeFile('../src/H941000/' + channel +'/'+ title + '.html', template, err => {
+      if (err) throw err;
+      shell.exec(`git commit -am "H941000: ${channel} - ${title}"`)
+      console.log("run 'git push' if you liked all videos for the day")
+    })
+  })
 }
 
 const scriptDir    = process.argv[1].trim()
@@ -83,11 +102,9 @@ if (youtubeId) {
     }
 
     const title = result.items[0].snippet.localized.title
-    const template = genTemplate(title, youtubeId, `https://www.youtube.com/embed/${youtubeId}`, 'youtube')
-    fs.writeFile(`../src/H941000/${getCurrentDateReversed()}_${title}.html`, template, function (err) {
-      if (err) throw err;
-      console.log('Check the side if everything is fine');
-    })
+    const channel = result.items[0].snippet.channelTitle
+    const template = genTemplate(channel, title, youtubeId, 'https://www.youtube.com/embed/' + youtubeId, 'youtube')
+    write(channel, template, title)
   })
 } else if (vimeoId) {
   lib.request({
@@ -97,12 +114,10 @@ if (youtubeId) {
       console.error(err)
       process.exit(1)
     }
-    const title    = data.name
-    const template = genTemplate(title, vimeoId, `https://player.vimeo.com/video/${vimeoId}`, 'vimeo')
-    fs.writeFile(`../src/H941000/${getCurrentDateReversed()}_${title}.html`, template, err => {
-      if (err) throw err;
-      console.log('Check the side if everything is fine');
-    })
+    const title   = data.name
+    const channel = data.user.name
+    const template = genTemplate(channel, title, vimeoId, 'https://player.vimeo.com/video/' + vimeoId, 'vimeo')
+    write(channel, template, title)
   })
 } else {
   console.error('Not a valid Youtube or Vimeo Link')
