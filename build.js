@@ -100,6 +100,8 @@ metalsmith(__dirname)
     'pattern': '*.html'
   }))
 
+  // .use(formatcheck())
+
   .use((files, metalsmith, done) => {
     var file, filename
     for (filename in files) {
@@ -116,8 +118,6 @@ metalsmith(__dirname)
   }))
 
   .use(sitemap({ hostname: 'http://321157.eu' }))
-
-  // .use(formatcheck())
 
   .use(If(
     !process.env.PRODUCTION,

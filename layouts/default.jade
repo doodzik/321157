@@ -1,4 +1,8 @@
 doctype html
 html
-  include head
+  head
+    title=title
+    link(rel="stylesheet" href="/#{fingerprint['index.css']}")
+    meta(name="keywords" content="skateboard, skateboarding, video, street")
+    meta(name="description" content=meta_description)
   body!=contents

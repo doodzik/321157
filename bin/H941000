@@ -56,6 +56,7 @@ title: ${title}
 name: ${name}
 channel: ${channel}
 channel_title: ${channelTitle}
+meta_description: ${channel} - ${name}
 date: ${getCurrentDate()}
 platform: ${platform}
 video_id: ${video_id}
