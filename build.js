@@ -96,7 +96,8 @@ metalsmith(__dirname)
 
   .use(layout({
     engine: 'jade',
-    'default': 'default.jade'
+    'default': 'default.jade',
+    'pattern': '*.html'
   }))
 
   .use((files, metalsmith, done) => {
