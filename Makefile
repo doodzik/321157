@@ -1,11 +1,11 @@
 
 build: clean
-	PRODUCTION=true node serve.js
+	PRODUCTION=true node build.js
 
 clean:
-	rm -rf build
+	rm -rf .tmp
 
 serve:
-	node serve.js
+	node build.js
 
 .PHONY: build serve clean
