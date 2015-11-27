@@ -1,0 +1,17 @@
+language: node
+sudo: false
+addons:
+  apt:
+    packages:
+    - sshpass
+
+before_script:
+  - npm install
+
+script:
+  - make build
+
+after_success:
+  - export SSHPASS=$DEPLOY_PASS
+  - sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST rmdir $DEPLOY_PATH
+  - sshpass -e scp -r .tmp $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH

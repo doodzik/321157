@@ -1,5 +1,6 @@
+
 build: clean
-	node build.js
+	PRODUCTION=true node serve.js
 
 clean:
 	rm -rf build

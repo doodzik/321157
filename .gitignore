@@ -28,3 +28,4 @@ node_modules
 
 .DS_store
 .tmp
+src/format_failed.json
