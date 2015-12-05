@@ -41,10 +41,9 @@ var supported = { browsers: ['> 1%', 'last 2 versions', 'IE >= 9'] }
 metalsmith(__dirname)
   // Build to .tmp
   .destination('.tmp')
- 
+
   // Process metadata
   .metadata(metadata)
-  .use(pageTitles())
 
   // Process css
   .use(autoprefixer(supported))
@@ -55,9 +54,9 @@ metalsmith(__dirname)
     if(!!filename.match(/^H941000/g)) {
       var player
       if(file.platform == 'youtube')
-        player = `<iframe width="420" height="315" src="https://www.youtube.com/embed/${file.video_id}" frameborder="0" allowfullscreen></iframe>`
+        player = `<iframe width="420" height="315" src="https://www.youtube.com/embed/${file.video_id}" allowfullscreen></iframe>`
       else if(file.platform == 'vimeo')
-        player = `<iframe width="420" height="315" src="https://player.vimeo.com/video/${file.video_id}" frameborder="0" allowfullscreen></iframe>`
+        player = `<iframe width="420" height="315" src="https://player.vimeo.com/video/${file.video_id}" allowfullscreen></iframe>`
       else
         throw new Error(platform + ' is unsupported')
 
@@ -66,13 +65,14 @@ metalsmith(__dirname)
                                      title="${file.channel} - ${file.name}">${file.date}</a>
                                   </h3>
                                   ${player}`)
+      file.contents_without_layout = file.contents
     }
   }))
 
   .use(collections({
     "H941000": {
       pattern: 'H941000/**/**.html',
-      sortBy: 'date',
+      sortBy: 'timestamp',
       reverse: true
     }
   }))
@@ -97,10 +97,10 @@ metalsmith(__dirname)
   .use(layout({
     engine: 'jade',
     'default': 'default.jade',
-    'pattern': '*.html'
+    'pattern': '**/**.html'
   }))
 
-  // .use(formatcheck())
+  // .use(formatcheck({ verbose: true }))
 
   .use((files, metalsmith, done) => {
     var file, filename

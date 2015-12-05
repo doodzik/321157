@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title=title
+    title #{mainTitle} | #{title}
     link(rel="stylesheet" href="/#{fingerprint['index.css']}")
     meta(name="keywords" content="skateboard, skateboarding, videos, street")
     meta(name="description" content="Official dealer of the best skatevideos around")
@@ -9,12 +9,12 @@ html
     h1 H941000 /&nbsp;
       a(href='/H941000/rss.xml') rss
     each post in pagination.files
-      !=post.contents
+      !=post.contents_without_layout
 
     .pagination
       if pagination.previous
-        a.btn(href='/' + paginate.previous.path)
+        a.btn(href='/' + pagination.previous.path)
           | Newer
       if pagination.next
-        a.btn(href='/' + paginate.next.path)
+        a.btn(href='/' + pagination.next.path)
           | Older

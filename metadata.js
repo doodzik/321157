@@ -1,5 +1,5 @@
 module.exports = {
-  "title": "4",
+  "mainTitle": "321157",
   "site": {
     "url": "321157.eu"
   }

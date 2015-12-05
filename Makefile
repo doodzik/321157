@@ -1,4 +1,3 @@
-
 build: clean
 	PRODUCTION=true node build.js
 

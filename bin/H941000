@@ -48,16 +48,18 @@ function getCurrentDateReversed(){
 }
 
 function genTemplate(channel, title, video_id, link, platform) {
-  name   = title
-  title  = title.replace(/\s/g, '_')
-  channelTitle  = channel.replace(/\s/g, '_')
+  name   = encodeURI(title)
+  title  = encodeURIComponent(title)
+  channelTitle  = encodeURIComponent(channel)
   return `---
 title: ${title}
+mainTitle: H941000
 name: ${name}
 channel: ${channel}
 channel_title: ${channelTitle}
 meta_description: ${channel} - ${name}
 date: ${getCurrentDate()}
+timestamp: ${Date.now()}
 platform: ${platform}
 video_id: ${video_id}
 excerpt: ${name}
@@ -65,14 +67,13 @@ excerpt: ${name}
 }
 
 function write(channel, template, title){
-  channel = channel.replace(/\s/g, '_')
-  title   = title.replace(/\s/g, '_')
   mkdirp('../src/H941000/' + channel, err => {
     if (err) throw err;
-    fs.writeFile('../src/H941000/' + channel +'/'+ title + '.html', template, err => {
+    fs.writeFile('../src/H941000/' + `${channel}/${title}.html`, template, err => {
       if (err) throw err;
-      shell.exec(`git commit -am "H941000: ${channel} - ${title}"`)
-      console.log("run 'git push' if you liked all videos for the day")
+      shell.exec(`git add --all`)
+      shell.exec(`git commit -m "H941000: ${channel} - ${title}"`)
+      shell.exec(`git push`)
     })
   })
 }
@@ -124,3 +125,4 @@ if (youtubeId) {
   console.error('Not a valid Youtube or Vimeo Link')
   process.exit(1)
 }
+

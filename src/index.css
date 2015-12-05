@@ -15,3 +15,7 @@ body {
   color:  rgb(151, 151, 151);
   text-align: center;
 }
+
+iframe {
+  border: none
+}

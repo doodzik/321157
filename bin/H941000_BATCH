@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# loop over each line of file
+# $1 is the filename
+for URL in $(cut -d, -f2 < $1)
+do
+      ~/321157/bin/H941000 $URL
+done
