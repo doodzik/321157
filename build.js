@@ -100,7 +100,7 @@ metalsmith(__dirname)
     pattern:   '**/**.html'
   }))
 
-  // .use(formatcheck({ verbose: true }))
+  .use(formatcheck({ verbose: true }))
 
   .use((files, metalsmith, done) => {
     var file, filename
