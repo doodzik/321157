@@ -87,7 +87,7 @@ metalsmith(__dirname)
       perPage: 5,
       layout: 'H941000.jade',
       first: 'index.html',
-      path: 'page/:num/index.html',
+      path: 'H941000/page/:num/index.html',
       pageMetadata: {
         title: 'H941000'
       }
