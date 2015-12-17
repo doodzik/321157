@@ -30,3 +30,4 @@ node_modules
 .tmp
 src/format_failed.json
 src/.format_failed.json
+src/.format_checked.json
