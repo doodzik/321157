@@ -53,6 +53,8 @@ metalsmith(__dirname)
   .use(each((file, filename) => {
     if(!!filename.match(/^H941000/g)) {
       var player
+      if(!file.platform)
+        console.log(file)
       if(file.platform == 'youtube')
         player = `<iframe width="420" height="315" src="https://www.youtube.com/embed/${file.video_id}" allowfullscreen></iframe>`
       else if(file.platform == 'vimeo')

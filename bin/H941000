@@ -34,7 +34,7 @@ function getYoutubeId(url) {
 function getCurrentDate(){
   var date  = new Date();
   var day   = date.getDate();
-  var month = date.getMonth();
+  var month = date.getMonth() + 1;
   var year  = date.getFullYear();
   return `${day}-${month}-${year}`
 }
@@ -42,7 +42,7 @@ function getCurrentDate(){
 function getCurrentDateReversed(){
   var date  = new Date();
   var day   = date.getDate();
-  var month = date.getMonth();
+  var month = date.getMonth() + 1;
   var year  = date.getFullYear();
   return `${year}-${month}-${day}`
 }
