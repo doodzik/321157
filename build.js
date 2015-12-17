@@ -72,7 +72,7 @@ metalsmith(__dirname)
   .use(collections({
     "H941000": {
       pattern: 'H941000/**/**.html',
-      sortBy: 'timestamp',
+      sortBy:  'timestamp',
       reverse: true
     }
   }))
@@ -85,9 +85,9 @@ metalsmith(__dirname)
   .use(pagination({
     'collections.H941000': {
       perPage: 5,
-      layout: 'H941000.jade',
-      first: 'index.html',
-      path: 'H941000/page/:num/index.html',
+      layout:  'H941000.jade',
+      first:   'index.html',
+      path:    'H941000/page/:num/index.html',
       pageMetadata: {
         title: 'H941000'
       }
@@ -95,9 +95,9 @@ metalsmith(__dirname)
   }))
 
   .use(layout({
-    engine: 'jade',
+    engine:    'jade',
     'default': 'default.jade',
-    'pattern': '**/**.html'
+    pattern:   '**/**.html'
   }))
 
   // .use(formatcheck({ verbose: true }))
