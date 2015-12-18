@@ -52,17 +52,17 @@ function genTemplate(channel, title, video_id, link, platform) {
   title  = encodeURIComponent(title)
   channelTitle  = encodeURIComponent(channel)
   return `---
-title: ${title}
+title: "${title}"
 mainTitle: H941000
-name: ${name}
-channel: ${channel}
-channel_title: ${channelTitle}
-meta_description: ${channel} - ${name}
+name: "${name}"
+channel: "${channel}"
+channel_title: "${channelTitle}"
+meta_description: "${channel} - ${name}"
 date: ${getCurrentDate()}
 timestamp: ${Date.now()}
 platform: ${platform}
-video_id: ${video_id}
-excerpt: ${name}
+video_id: "${video_id}"
+excerpt: "${name}"
 ---`
 }
 
