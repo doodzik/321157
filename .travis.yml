@@ -8,6 +8,7 @@ addons:
 script:
 - make build
 after_success:
+- ncftp -u $FTP_USER -p $FTP_PASS $FTP_HOST <<< "rm -rf ./H941000/page"
 - ncftpput -R -v -u $FTP_USER -p $FTP_PASS $FTP_HOST ./ .tmp/*
 env:
   global:

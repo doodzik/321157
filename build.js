@@ -53,8 +53,6 @@ metalsmith(__dirname)
   .use(each((file, filename) => {
     if(!!filename.match(/^H941000/g)) {
       var player
-      if(!file.platform)
-        console.log(filename);
       if(file.platform == 'youtube')
         player = `<iframe width="420" height="315" src="https://www.youtube.com/embed/${file.video_id}" allowfullscreen></iframe>`
       else if(file.platform == 'vimeo')
@@ -74,7 +72,7 @@ metalsmith(__dirname)
   .use(collections({
     "H941000": {
       pattern: 'H941000/**/**.html',
-      sortBy: 'timestamp',
+      sortBy:  'timestamp',
       reverse: true
     }
   }))
@@ -87,9 +85,9 @@ metalsmith(__dirname)
   .use(pagination({
     'collections.H941000': {
       perPage: 5,
-      layout: 'H941000.jade',
-      first: 'index.html',
-      path: 'page/:num/index.html',
+      layout:  'H941000.jade',
+      first:   'index.html',
+      path:    'H941000/page/:num/index.html',
       pageMetadata: {
         title: 'H941000'
       }
@@ -97,12 +95,12 @@ metalsmith(__dirname)
   }))
 
   .use(layout({
-    engine: 'jade',
+    engine:    'jade',
     'default': 'default.jade',
-    'pattern': '**/**.html'
+    pattern:   '**/**.html'
   }))
 
-  // .use(formatcheck({ verbose: true }))
+  .use(formatcheck({ verbose: true }))
 
   .use((files, metalsmith, done) => {
     var file, filename

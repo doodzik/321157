@@ -1,5 +1,7 @@
 @import "normalize.css";
 
+@custom-media --small-viewport (max-width: 30em);
+
 ul {
   padding: 0;
 }
@@ -17,5 +19,13 @@ body {
 }
 
 iframe {
-  border: none
+  border: none;
+}
+
+.pagination {
+  margin: 2em;
+}
+
+.pagination a {
+  margin: 0 0.5em;
 }

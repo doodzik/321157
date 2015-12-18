@@ -34,7 +34,7 @@ function getYoutubeId(url) {
 function getCurrentDate(){
   var date  = new Date();
   var day   = date.getDate();
-  var month = date.getMonth();
+  var month = date.getMonth() + 1;
   var year  = date.getFullYear();
   return `${day}-${month}-${year}`
 }
@@ -42,7 +42,7 @@ function getCurrentDate(){
 function getCurrentDateReversed(){
   var date  = new Date();
   var day   = date.getDate();
-  var month = date.getMonth();
+  var month = date.getMonth() + 1;
   var year  = date.getFullYear();
   return `${year}-${month}-${day}`
 }
@@ -52,30 +52,34 @@ function genTemplate(channel, title, video_id, link, platform) {
   title  = encodeURIComponent(title)
   channelTitle  = encodeURIComponent(channel)
   return `---
-title: ${title}
+title: "${title}"
 mainTitle: H941000
-name: ${name}
-channel: ${channel}
-channel_title: ${channelTitle}
-meta_description: ${channel} - ${name}
+name: "${name}"
+channel: "${channel}"
+channel_title: "${channelTitle}"
+meta_description: "${channel} - ${name}"
 date: ${getCurrentDate()}
 timestamp: ${Date.now()}
 platform: ${platform}
-video_id: ${video_id}
-excerpt: ${name}
+video_id: "${video_id}"
+excerpt: "${name}"
 ---`
 }
 
 function write(channel, template, title){
   mkdirp('../src/H941000/' + channel, err => {
     if (err) throw err;
-    fs.writeFile('../src/H941000/' + `${channel}/${title}.html`, template, err => {
+    fs.writeFile('../src/H941000/' + `${channel}/${title}.html`, template, { flag: 'wx' }, err => {
       if (err) throw err;
       shell.exec(`git add --all`)
       shell.exec(`git commit -m "H941000: ${channel} - ${title}"`)
       shell.exec(`git push`)
     })
   })
+}
+
+var escapeShell = function(cmd) {
+  return cmd.replace(/(["\s'$`\\/])/g,'')
 }
 
 const scriptDir    = process.argv[1].trim()
@@ -103,8 +107,8 @@ if (youtubeId) {
       process.exit(1)
     }
 
-    const title = result.items[0].snippet.localized.title
-    const channel = result.items[0].snippet.channelTitle
+    const title = escapeShell(result.items[0].snippet.localized.title)
+    const channel = escapeShell(result.items[0].snippet.channelTitle)
     const template = genTemplate(channel, title, youtubeId, 'https://www.youtube.com/embed/' + youtubeId, 'youtube')
     write(channel, template, title)
   })
@@ -116,8 +120,8 @@ if (youtubeId) {
       console.error(err)
       process.exit(1)
     }
-    const title   = data.name
-    const channel = data.user.name
+    const title   = escapeShell(data.name)
+    const channel = escapeShell(data.user.name)
     const template = genTemplate(channel, title, vimeoId, 'https://player.vimeo.com/video/' + vimeoId, 'vimeo')
     write(channel, template, title)
   })
