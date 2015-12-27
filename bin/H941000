@@ -1,3 +1,6 @@
+# -*- mode: javascript -*-
+# vi: set ft=javascript :
+
 #!/usr/bin/env node
 
 var fs = require('fs')

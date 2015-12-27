@@ -10,6 +10,9 @@ script:
 after_success:
 - ncftp -u $FTP_USER -p $FTP_PASS $FTP_HOST <<< "rm -rf ./H941000/page"
 - ncftpput -R -v -u $FTP_USER -p $FTP_PASS $FTP_HOST ./ .tmp/*
+branches:
+  only:
+    - master
 env:
   global:
   - secure: ekUNyq2mirmVmQ3BMTomHH3Iv3OgktNmwcF+rwYpVgKCFbIefHRkp6+EvlECsFr7qHYddlwiwmSMLyygYuQPQA57zcIGBuFeUf2+eN9vHkmmLEM5Yjp1lD64OvhmXnGieVzX+LJHHfYgLon67HrNjS8uA8Cbec8B2/5KQG9r4I67G+huH4yi+T8dM3zV445hp4RORs+oil/MwfAoMQkB7oAS0oTQl4h767mavscC1cQdPAGTCKQ25GhW8dHOJsJtDxcm615ImdfvGOq7ftjxEmttUCv5o8dEDP916HR0hGbjcWu2LeaqtZDJp5Djuba+L8zWdLj8FlxPPBbrab/If14XJmLpBjpiYkTAOoINGT3JmoaLFFFfyzTfwAYt2/Wcs8wv5DpDyo9VUS+CGgWvBjgvwcBe28Gt8esaK7uiFYBOpl9v9vpx1vG28tOQHvrE8iBBtEAEk99ZmgCc0v2Y9FXwXpptfbTlnDzAJnKEOo9bYD0oUh/QNmS3kBpCEanzUw7O3FsKAt8ezME5dv8xph7yqvRJNY0/m/vhTJ0BGkgWknkz1gbRiV3S0tj22A5VeE3EDHsM6XdYZy9xcl0jsdgEMMbRVwLzP2HcCeRloitARdnWp+2NcvoBanFkWWFz6t5tSefiUXNmT8ybFQRieps5tJ73Vd8jMNgvC5zbXEE=
