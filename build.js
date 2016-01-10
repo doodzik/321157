@@ -54,7 +54,6 @@ var meta_video_to_iframe = each((file, filename) => {
                                 </h3>
                                 ${player}`)
     file.contents_without_layout = file.contents
-    console.log(file);
   }
 })
 
@@ -118,7 +117,9 @@ metalsmith(__dirname)
 
   .use(feed({
     collection: 'likes',
-    destination: 'likes/rss.xml'
+    destination: 'likes/rss.xml',
+    title: '321157',
+    description: 'Official dealer of the best skatevideos around',
   }))
 
   .use(sitemap({ hostname: 'http://321157.eu' }))
