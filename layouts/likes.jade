@@ -1,15 +1,22 @@
 doctype html
 html
   head
-    title #{mainTitle} | #{title}
+    if pagination.num == 1
+      title #{title}
+    else 
+      title #{title} | Page #{pagination.num}
     link(rel="stylesheet" href="/#{fingerprint['index.css']}")
     meta(name="keywords" content="skateboard, skateboarding, videos, street")
     meta(name="description" content="Official dealer of the best skatevideos around")
   body
-    h1 
-      a(href='/') H941000
+    h1
+      a(href='/') 321157
+    h3 
+      a(href='/') likes
       | &nbsp;/&nbsp;
-      a(href='/H941000/rss.xml') rss
+      a(target="_blank" href='https://www.instagram.com/hd111574') insta
+      | &nbsp;/&nbsp;
+      a(href='/likes/rss.xml') rss
     each post in pagination.files
       !=post.contents_without_layout
 

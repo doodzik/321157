@@ -37,6 +37,27 @@ var plugins = [
 // Autoprefixer settings
 var supported = { browsers: ['> 1%', 'last 2 versions', 'IE >= 9'] }
 
+var meta_video_to_iframe = each((file, filename) => {
+  if(!!filename.match(/^likes/g)) {
+    var player
+    if(file.platform == 'youtube')
+      player = `<iframe width="420" height="315" src="https://www.youtube.com/embed/${file.video_id}" allowfullscreen></iframe>`
+    else if(file.platform == 'vimeo')
+      player = `<iframe width="420" height="315" src="https://player.vimeo.com/video/${file.video_id}" allowfullscreen></iframe>`
+    else
+      throw new Error(platform + ' is unsupported')
+
+    file.mainTitle = '321157 likes '
+    file.contents = new Buffer(`<h3>
+                                <a href="/likes/${file.channel_title}/${file.title}"
+                                   title="${file.channel} - ${file.name}">${file.date}</a>
+                                </h3>
+                                ${player}`)
+    file.contents_without_layout = file.contents
+    console.log(file);
+  }
+})
+
 // Build
 metalsmith(__dirname)
   // Build to .tmp
@@ -50,28 +71,11 @@ metalsmith(__dirname)
   .use(postcss(plugins))
   .use(fingerprint({ pattern: 'index.css' }))
 
-  .use(each((file, filename) => {
-    if(!!filename.match(/^H941000/g)) {
-      var player
-      if(file.platform == 'youtube')
-        player = `<iframe width="420" height="315" src="https://www.youtube.com/embed/${file.video_id}" allowfullscreen></iframe>`
-      else if(file.platform == 'vimeo')
-        player = `<iframe width="420" height="315" src="https://player.vimeo.com/video/${file.video_id}" allowfullscreen></iframe>`
-      else
-        throw new Error(platform + ' is unsupported')
-
-      file.contents = new Buffer(`<h3>
-                                  <a href="/H941000/${file.channel_title}/${file.title}"
-                                     title="${file.channel} - ${file.name}">${file.date}</a>
-                                  </h3>
-                                  ${player}`)
-      file.contents_without_layout = file.contents
-    }
-  }))
+  .use(meta_video_to_iframe)
 
   .use(collections({
-    "H941000": {
-      pattern: 'H941000/**/**.html',
+    "likes": {
+      pattern: 'likes/**/**.html',
       sortBy:  'timestamp',
       reverse: true
     }
@@ -83,13 +87,13 @@ metalsmith(__dirname)
   }))
 
   .use(pagination({
-    'collections.H941000': {
+    'collections.likes': {
       perPage: 5,
-      layout:  'H941000.jade',
+      layout:  'likes.jade',
       first:   'index.html',
-      path:    'H941000/page/:num/index.html',
+      path:    'likes/page/:num/index.html',
       pageMetadata: {
-        title: 'H941000'
+        title: '321157 | likes'
       }
     }
   }))
@@ -113,8 +117,8 @@ metalsmith(__dirname)
   })
 
   .use(feed({
-    collection: 'H941000',
-    destination: 'H941000/rss.xml'
+    collection: 'likes',
+    destination: 'likes/rss.xml'
   }))
 
   .use(sitemap({ hostname: 'http://321157.eu' }))
