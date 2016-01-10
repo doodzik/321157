@@ -53,7 +53,6 @@ function genTemplate(channel, title, video_id, link, platform) {
   channelTitle  = encodeURIComponent(channel)
   return `---
 title: "${title}"
-mainTitle: H941000
 name: "${name}"
 channel: "${channel}"
 channel_title: "${channelTitle}"
@@ -67,12 +66,12 @@ excerpt: "${name}"
 }
 
 function write(channel, template, title){
-  mkdirp('../src/H941000/' + channel, err => {
+  mkdirp('../src/likes/' + channel, err => {
     if (err) throw err;
-    fs.writeFile('../src/H941000/' + `${channel}/${title}.html`, template, { flag: 'wx' }, err => {
+    fs.writeFile('../src/likes/' + `${channel}/${title}.html`, template, { flag: 'wx' }, err => {
       if (err) throw err;
       shell.exec(`git add --all`)
-      shell.exec(`git commit -m "H941000: ${channel} - ${title}"`)
+      shell.exec(`git commit -m "Like: ${channel} - ${title}"`)
       shell.exec(`git push`)
     })
   })

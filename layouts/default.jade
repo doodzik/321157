@@ -1,8 +1,17 @@
 doctype html
 html
   head
-    title #{mainTitle} | #{title}
+    title #{mainTitle} #{title}
     link(rel="stylesheet" href="/#{fingerprint['index.css']}")
     meta(name="keywords" content="skateboard, skateboarding, video, street")
     meta(name="description" content=meta_description)
-  body!=contents
+  body
+    h1
+      a(href='/') 321157
+    nav
+      a(href='/') likes
+      | &nbsp;/&nbsp;
+      a(target="_blank" href='https://www.instagram.com/hd111574') insta
+      | &nbsp;/&nbsp;
+      a(href='/likes/rss.xml') rss
+    !=contents
