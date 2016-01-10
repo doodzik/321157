@@ -122,7 +122,14 @@ metalsmith(__dirname)
     description: 'Official dealer of the best skatevideos around',
   }))
 
-  .use(sitemap({ hostname: 'http://321157.eu' }))
+  .use(each((file, filename) => {
+    if(file.layout == 'likes.jade')
+      file.changefreq = 'daily'
+    if(file.path == 'index.html')
+      file.priority = 1.0
+  }))
+
+  .use(sitemap({hostname: 'http://321157.eu' }))
 
   .use(If(
     !process.env.PRODUCTION,
