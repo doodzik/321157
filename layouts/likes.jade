@@ -3,7 +3,7 @@ html
   head
     if pagination.num == 1
       title #{title}
-    else 
+    else
       title #{title} | Page #{pagination.num}
     link(rel="stylesheet" href="/#{fingerprint['index.css']}")
     meta(name="keywords" content="skateboard, skateboarding, videos, street")
@@ -11,7 +11,7 @@ html
   body
     h1
       a(href='/') 321157
-    h3 
+    nav
       a(href='/') likes
       | &nbsp;/&nbsp;
       a(target="_blank" href='https://www.instagram.com/hd111574') insta
